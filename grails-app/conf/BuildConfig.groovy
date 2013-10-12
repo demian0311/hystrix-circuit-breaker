@@ -36,13 +36,15 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        runtime  'com.netflix.hystrix:hystrix-core:1.3.7'
-        runtime  'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.7'
+        runtime     'com.netflix.hystrix:hystrix-core:1.3.7',
+                    'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.7'
+        // HystrixMetricsStreamServlet
     }
 
     plugins {
         build(":release:3.0.0",
-              ":rest-client-builder:1.0.3") {
+              ":rest-client-builder:1.0.3",
+              ":tomcat:7.0.42") {
             export = false
         }
     }

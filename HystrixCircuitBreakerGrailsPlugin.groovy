@@ -40,34 +40,21 @@ Hystrix is awesome, this is an attempt to make it easy to use for a Grails appli
 //    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
 
     def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before
-
-        def mappingElement = webXml.'servlet-mapping'
+        def mappingElement = xml.'servlet-mapping'
 
         def lastMapping = mappingElement[mappingElement.size() - 1]
         lastMapping + {
             'servlet' {
-                'description'
+                'servlet-name'("HystrixMetricsStreamServlet")
+                'display-name'("HystrixMetricsStreamServlet")
+                'servlet-class'("com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet")
+                'description'("")
             }
             'servlet-mapping' {
                 'servlet-name'("HystrixMetricsStreamServlet")
                 'url-pattern'("/hystrix.stream")
             }
         }
-
-        /* we need this from the hystrix docs: https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-metrics-event-stream
-        <servlet>
-        <description></description>
-        <display-name>HystrixMetricsStreamServlet</display-name>
-        <servlet-name>HystrixMetricsStreamServlet</servlet-name>
-        <servlet-class>com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet</servlet-class>
-        </servlet>
-
-        <servlet-mapping>
-        <servlet-name>HystrixMetricsStreamServlet</servlet-name>
-        <url-pattern>/hystrix.stream</url-pattern>
-        </servlet-mapping>
-         */
     }
 
     def doWithSpring = {
