@@ -1,21 +1,41 @@
 package hystrix.circuit.breaker
 
+import com.netflix.hystrix.HystrixCommand
+import com.netflix.hystrix.HystrixCommandGroupKey
+
 class TestController {
-    def testService
 
     def index() {
-        log.info("*****************")
-        log.info("*****************")
+        String result = (new CommandServiceMethod("FOO")).execute()
+        log.info("result: " + result)
 
-        log.info("testService: " + testService)
-        log.info("testService: " + testService)
+        render("""{"result": "${result}" }\n""")
+    }
+}
 
-        String lastResult = testService.serviceMethod("FOO")
-        log.info("lastResult: " + lastResult)
+class CommandServiceMethod extends HystrixCommand{
+    String someState
 
-        render(""" {
-            "result": "${lastResult}"
-            }
-        """)
+    def CommandServiceMethod(String stringIn){
+        super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
+        println("command created")
+        someState = stringIn
+    }
+
+    @Override
+    def String run(){
+        println("command called")
+        def multiplier = (Math.random() * 100).toInteger()
+        println("multiplier: " + multiplier)
+
+        if(multiplier % 9 == 0){
+            throw new RuntimeException("something bad happened")
+        } else if(multiplier % 21 == 0){
+            Thread.sleep(10 * 1000)
+        } else {
+            Thread.sleep(multiplier * 10)
+        }
+
+        someState.reverse()
     }
 }
