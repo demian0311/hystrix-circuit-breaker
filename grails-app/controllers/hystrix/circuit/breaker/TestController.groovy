@@ -6,17 +6,17 @@ import com.netflix.hystrix.HystrixCommandGroupKey
 class TestController {
 
     def index() {
-        String result = (new CommandServiceMethod("FOO")).execute()
+        String result = (new DodgyStringReverser("FOO")).execute()
         log.info("result: " + result)
 
         render("""{"result": "${result}" }\n""")
     }
 }
 
-class CommandServiceMethod extends HystrixCommand{
+class DodgyStringReverser extends HystrixCommand{
     String someState
 
-    def CommandServiceMethod(String stringIn){
+    def DodgyStringReverser(String stringIn){
         super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
         println("command created")
         someState = stringIn
