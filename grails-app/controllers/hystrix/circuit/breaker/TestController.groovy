@@ -2,7 +2,7 @@ package hystrix.circuit.breaker
 
 import com.netflix.hystrix.HystrixCommand
 import com.netflix.hystrix.HystrixCommandGroupKey
-import com.netflix.hystrix.HystrixCommandProperties
+//import com.netflix.hystrix.HystrixCommandProperties
 
 class TestController {
 
@@ -18,18 +18,9 @@ class DodgyStringReverser extends HystrixCommand{
     String someState
 
     def DodgyStringReverser(String stringIn){
-        super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
-
-        //super(new HystrixCommandProperties.Setter().withExecutionIsolationThreadTimeoutInMilliseconds(50))
-
-        // HystrixCommandProperties.Setter()
-        //.withExecutionIsolationThreadTimeoutInMilliseconds(int value)
-
-
-        //super(HystrixCommandProperties.Setter()
-        //        .withCircuitBreakerEnabled(true)
-        //        .withCircuitBreakerErrorThresholdPercentage(50)
-        //        .withCircuitBreakerSleepWindowInMilliseconds(1000))
+        super(HystrixCommand.Setter
+                .withGroupKey(HystrixCommandGroupKey.Factory.asKey("DodgyStringReverser"))
+        )
 
         println("command created")
         someState = stringIn
