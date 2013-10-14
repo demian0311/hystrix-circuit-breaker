@@ -5,10 +5,8 @@ class HystrixCircuitBreakerGrailsPlugin {
     def grailsVersion = "2.3 > *"
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-        "grails-app/views/error.gsp"
-
-        // TODO: these are things we'll have in the same project for testing / validation
-        // but we need to exlucde them
+        "grails-app/views/error.gsp",
+        "grails-app/controllers/hystrix/circuit/breaker/TestController.groovy"
     ]
 
     // TODO Fill in these fields
