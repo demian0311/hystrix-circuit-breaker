@@ -1,12 +1,20 @@
 package hystrix.circuit.breaker
 
+import com.netflix.config.ConfigurationManager
 import com.netflix.hystrix.HystrixCommand
 import com.netflix.hystrix.HystrixCommandGroupKey
-//import com.netflix.hystrix.HystrixCommandProperties
+import com.netflix.hystrix.HystrixCommandProperties
+import static com.netflix.hystrix.HystrixCommand.Setter
+import static com.netflix.hystrix.HystrixCommandGroupKey.Factory
 
 class TestController {
 
+
     def index() {
+        //ConfigurationManager.getConfigInstance().setProperty("hystrix.threadpool.default.coreSize", 8);
+        //ConfigurationManager.configInstance.addProperty(
+        //        "hystrix.command.DodgyStringReverser.execution.isolation.thread.timeoutInMilliseconds", 8)
+
         String result = (new DodgyStringReverser("FOO")).execute()
         log.info("result: " + result)
 
@@ -14,13 +22,11 @@ class TestController {
     }
 }
 
-class DodgyStringReverser extends HystrixCommand{
+class DodgyStringReverser extends HystrixCommand {
     String someState
 
     def DodgyStringReverser(String stringIn){
-        super(HystrixCommand.Setter
-                .withGroupKey(HystrixCommandGroupKey.Factory.asKey("DodgyStringReverser"))
-        )
+        super(HystrixCommandGroupKey.Factory.asKey(this.getClass().name))
 
         println("command created")
         someState = stringIn
