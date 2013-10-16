@@ -25,8 +25,14 @@ class TestController {
 class DodgyStringReverser extends HystrixCommand {
     String someState
 
+    private def createSetter(){
+        Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("GroupName"))
+    }
+
+
     def DodgyStringReverser(String stringIn){
-        super(HystrixCommandGroupKey.Factory.asKey(this.getClass().name))
+        //super(HystrixCommandGroupKey.Factory.asKey(this.getClass().name))
+        super(createSetter())
 
         println("command created")
         someState = stringIn
