@@ -27,17 +27,12 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 class DodgyStringReverser extends HystrixCommand {
     String someState
 
-    // com.netflix.hystrix.HystrixCommandProperties.Setter
     static com.netflix.hystrix.HystrixCommandProperties.Setter createHystrixCommandPropertiesSetter(){
         HystrixCommandProperties.invokeMethod("Setter", null)
     }
 
     static com.netflix.hystrix.HystrixCommand.Setter createHystrixCommandSetter(){
-        //def hcp = Class.forName("com.netflix.hystrix.HystrixCommandProperties", true, Thread.currentThread().contextClassLoader) // LinkageError
-        //def hcp = Class.forName("com.netflix.hystrix.HystrixCommandProperties", true, getClass().classLoader) // ClassNotFoundException
-        //def hcp = 'com.netflix.hystrix.HystrixCommandProperties' as Class // ClassNotFoundException
-
-        Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("GroupName"))
+        Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(this.class.name))
                 .andCommandPropertiesDefaults(createHystrixCommandPropertiesSetter().withCircuitBreakerEnabled(true).withCircuitBreakerSleepWindowInMilliseconds(1000))
     }
 
