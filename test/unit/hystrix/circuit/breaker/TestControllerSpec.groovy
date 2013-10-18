@@ -16,5 +16,6 @@ class TestControllerSpec extends Specification {
     }
 
     void "test something"() {
+        println("hello world")
     }
 }
