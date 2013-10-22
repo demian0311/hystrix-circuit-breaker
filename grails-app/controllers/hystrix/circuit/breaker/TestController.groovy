@@ -24,22 +24,24 @@ class DodgyStringReverser extends HystrixCommand {
     }
 
 
-    def DodgyStringReverser(String stringIn){
+    DodgyStringReverser(String stringIn){
         super(createHystrixCommandSetter())
         println("command created")
         someState = stringIn
     }
 
     @Override
-    def String run(){
+    String run(){
         println("command called")
-        def multiplier = (Math.random() * 100).toInteger()
+        int multiplier = Math.random() * 100
         println("multiplier: " + multiplier)
 
         // indeterminate behavior
         if(multiplier % 9 == 0){
             throw new RuntimeException("something bad happened")
-        } else if(multiplier % 21 == 0){
+        }
+
+        if(multiplier % 21 == 0){
             Thread.sleep(10 * 1000)
         } else {
             Thread.sleep(multiplier * 10)
