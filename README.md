@@ -1,7 +1,9 @@
 
 ## Summary
 This plugin gets your application set up to use the Hystrix Circuit Breaker from 
-Netflix. 
+Netflix.  If you don't know what circuit breakers are in the context of software
+here's [the Wikipedia page](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern).
+You should also read [Release It!](http://pragprog.com/book/mnee/release-it).
 
 ## Installation
 In your `BuildConfig.groovy` file add the following line in the `plugins` section.
@@ -15,71 +17,26 @@ This is a very brief introduction to how circuit breakers work with Hystrix.  Yo
 should totally read up on all that Hystrix has to offer. 
 
 To use Hystrix circuit breakers you need to wrap your code in a HystrixCommand.
+The is a Controller in this project contains a little sample class that extends  
+the HystrixCommand.
 
-Here's an example of a simple controller that uses a HystrixCommand.
+[TestController.groovy](https://github.com/demian0311/hystrix-circuit-breaker/blob/master/grails-app/controllers/hystrix/circuit/breaker/TestController.groovy)
 
-      import com.neidetcher.hcbp.util.HystrixConfigurationUtility
-      import com.netflix.hystrix.*
-
-      class TestController {
-
-      def index() {
-         String result = (new DodgyStringReverser("FOO")).execute()
-         log.info("result: " + result)
-
-         render("""{"result": "${result}" }\n""")
-      }
-      }
-
-      class DodgyStringReverser extends HystrixCommand {
-      String someState
-
-      static HystrixCommand.Setter createHystrixCommandSetter(){
-         HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(this.class.name))
-                  .andCommandPropertiesDefaults(
-                  HystrixConfigurationUtility.createHystrixCommandPropertiesSetter().withCircuitBreakerEnabled(true)
-                           .withCircuitBreakerSleepWindowInMilliseconds(1000))
-      }
-
-
-      def DodgyStringReverser(String stringIn){
-         super(createHystrixCommandSetter())
-         println("command created")
-         someState = stringIn
-      }
-
-      @Override
-      def String run(){
-         println("command called")
-         def multiplier = (Math.random() * 100).toInteger()
-         println("multiplier: " + multiplier)
-
-         // indeterminate behavior
-         if(multiplier % 9 == 0){
-               throw new RuntimeException("something bad happened")
-         } else if(multiplier % 21 == 0){
-               Thread.sleep(10 * 1000)
-         } else {
-               Thread.sleep(multiplier * 10)
-         }
-
-         someState.reverse()
-      }
-      }
-
-One thing to note is `HystrixConfigurationUtility.createHystrixCommandPropertiesSetter`
-in the `com.neidetcher.hcbp.util` package.  This is a 1-liner function that makes it
-easy to create a Setter() that Hystrix has you use to configure their HystrixCommand.
+One thing to note is [`HystrixConfigurationUtility.createHystrixCommandPropertiesSetter`](https://github.com/demian0311/hystrix-circuit-breaker/blob/master/src/groovy/com/neidetcher/hcbp/util/HystrixConfigurationUtility.groovy)
+This is a 1-liner function that makes it easy to create a Setter() that Hystrix 
+has you use to configure their HystrixCommand.  It's used in the aforementioned
+TestController.groovy if you want to see it in action.
 
 #### Hystrix Stream
-Once you do that and your command is run then Hystrix will start streaming information
-about how your circuit breakers are doing. 
+Once you have all that, you fire up your Grails application and your command is run then 
+Hystrix will start streaming information about how your circuit breakers are doing. 
 
+If you point your web browser to this then you will see a bunch of JSON.
 `http://localhost:8080/your-app/hystrix.stream`
 
 #### Hystrix Dashboard
-This is from the [Hystrix Dashboard](https://github.com/Netflix/Hystrix/wiki/Dashboard#run-via-gradle)
-documentation.
+Although the stream has lots of data it isn't pretty.  To look at a cool spark chart and
+other data about your circuit breakers you need to use the [Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
 
 ``` 
 $ git clone git@github.com:Netflix/Hystrix.git
@@ -93,23 +50,7 @@ When that comes up you will be presented with a form for a URL to give Hystrix D
 Enter the stream URL from above, probably something like this: http://localhost:8080/hystrix-circuit-breaker/hystrix.stream
 
 #### Hystrix Turbine
-You don't need Turbine for your little application but if you are running in an
+You don't need [Turbine](https://github.com/Netflix/Turbine) for your little application but if you are running in an
 enterprise and especially if you have a cluster of servers you will probably want
 to use the Hystrix Turbine project to consolidate the circuit breaker stream 
 information.
-
-TODO: link to Turbine
-
-### Background
-
-### Configuration
-
-
-
-
-You should see your stream available at this URL when your application is running:
-http://localhost:8080/hystrix-circuit-breaker/hystrix.stream
-
-But you still need to point an instance of the Hystrix Dashboard to your stream.
-Here are instructions to quickly get that going.
-
