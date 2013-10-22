@@ -48,7 +48,7 @@ $ ../gradlew jettyRun
 Once running, open http://localhost:7979/hystrix-dashboard.
 
 When that comes up you will be presented with a form for a URL to give Hystrix Dashboard. 
-Enter the stream URL from above, probably something like this: http://localhost:8080/hystrix-circuit-breaker/hystrix.stream
+Enter the stream URL from above, probably something like this: http://localhost:8080/your-app/hystrix.stream
 
 #### Hystrix Turbine
 You don't need [Turbine](https://github.com/Netflix/Turbine) for your little application but if you are running in an
