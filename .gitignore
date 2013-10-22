@@ -5,6 +5,8 @@
 *.ipr
 *.iws
 out/
-grails-hystrix-circuit-breaker-0.1.zip
-grails-hystrix-circuit-breaker-0.1.zip.sha1
+grails-hystrix-circuit-breaker-*.zip
+grails-hystrix-circuit-breaker-*.zip.sha1
 plugin.xml
+web-app
+target
