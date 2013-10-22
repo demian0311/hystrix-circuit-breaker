@@ -1,7 +1,8 @@
 
 ## Summary
-This plugin gets your application set up to use the Hystrix Circuit Breaker from 
-Netflix.  If you don't know what circuit breakers are in the context of software
+This plugin gets your application set up to use the 
+[Hystrix Circuit Breaker](https://github.com/Netflix/Hystrix) from [Netflix](http://netflix.com).  
+If you don't know what circuit breakers are in the context of software
 here's [the Wikipedia page](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern).
 You should also read [Release It!](http://pragprog.com/book/mnee/release-it).
 
