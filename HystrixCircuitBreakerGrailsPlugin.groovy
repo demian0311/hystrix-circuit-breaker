@@ -1,5 +1,7 @@
+import com.netflix.config.ConfigurationManager
+
 class HystrixCircuitBreakerGrailsPlugin {
-    def version = "0.1"
+    def version = "0.2"
     def grailsVersion = "2.0 > *"
     def pluginExcludes = [
         "grails-app/controllers/hystrix/circuit/breaker/TestController.groovy"
@@ -32,4 +34,20 @@ class HystrixCircuitBreakerGrailsPlugin {
             }
         }
     }
+	
+    private void configureHystrix(def application) {
+        def hystrixConfig = application.config.hystrix
+        if (hystrixConfig) {
+            def hystrixConfigProperties = hystrixConfig.toProperties('hystrix')
+            // throws NPE: ConfigurationManager.loadProperties(hystrixConfigProperties)
+            def config = ConfigurationManager.getConfigInstance()
+            hystrixConfigProperties.each { key, value ->
+                config.setProperty(key, value)
+            }
+        }
+    }
+
+    def doWithApplicationContext = { applicationContext -> 
+		configureHystrix(application) 
+	}
 }
