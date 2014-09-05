@@ -28,6 +28,50 @@ This is a 1-liner function that makes it easy to create a Setter() that Hystrix
 has you use to configure their HystrixCommand.  It's used in the aforementioned
 TestController.groovy if you want to see it in action.
 
+#### Grails 2.3 and Promise API Support
+
+Grails 2.3 introduced asynchronous support using the [Promise API](http://grails.org/doc/latest/guide/async.html).
+The purpose and design of Hystrix works well into this architecture. Grails provides async support in several areas
+using this API in which Hystrix is useful. This plugin adds dynamic methods into controller and service classes to
+wrap an existing HystrixCommand implementation in a Promise or create a HystrixCommand from a closure and wrap it in a Promise.
+This makes using Hystrix with async programming terse and enables use with Grails async utilities such as PromiseList and PromiseMap.
+
+Examples are in [TestController.groovy](https://github.com/demian0311/hystrix-circuit-breaker/blob/master/grails-app/controllers/hystrix/circuit/breaker/TestController.groovy).
+
+Wrap an existing HystrixCommand in a controller or service:
+```
+def index() {
+		def promise = hystrix(new DodgyStringReverser("FOO")) // DodgyStringReverser is a HystrixCommand implementation
+		render view:'index', model: tasks( one: promise )
+}
+```
+
+Create a Promise implemented by Hystrix:
+```
+def index() {
+		def promise = hystrix { "FOO".reverse() }
+		render view:'index', model: tasks( one: promise )
+}
+```
+
+The previous example will use defaults for the command which may not be desirable. It is better to specify at least the command and group keys:
+```
+def index() {
+		def promise = hystrix(command: 'reverse', group: 'strings') { "FOO".reverse() }
+		render view:'index', model: tasks( one: promise )
+}
+```
+
+The full options available with the hystrix method are:
+<dl>
+<dt>group</dt><dd>(String) group key</dd>
+<dt>command</dt><dd>(String) name of the command</dd>
+<dt>threadpool</dt><dd>(String) thread pool key</dd>
+<dt>cacheKey</dt><dd>(String) cache key</dd>
+<dt>fallback</dt><dd>(Closure or Object) fallback value or closure</dd>
+<dt>timeout</dt><dd>(long in millis) execution isolation timeout</dd>
+</dl>
+
 #### Hystrix Stream
 Once you have all that, you fire up your Grails application and your command is run then 
 Hystrix will start streaming information about how your circuit breakers are doing. 
