@@ -1,4 +1,6 @@
+import com.neidetcher.hcbp.HystrixService
 import com.netflix.config.ConfigurationManager
+import com.netflix.hystrix.HystrixCommand
 
 class HystrixCircuitBreakerGrailsPlugin {
     def version = "0.2"
@@ -47,7 +49,31 @@ class HystrixCircuitBreakerGrailsPlugin {
         }
     }
 
+	def doWithDynamicMethods = { ctx ->
+		addHystrixMethods(application, log)
+	}
+	
     def doWithApplicationContext = { applicationContext -> 
 		configureHystrix(application) 
+	}
+	
+	def onChange = { event ->
+		addHystrixMethods(event.application, log)
+	}
+	
+	private void addHystrixMethods(application, log) {
+		HystrixService svc = application.mainContext.hystrixService
+		
+		for(artefactClass in application.controllerClasses + application.serviceClasses) {
+			if (artefactClass.clazz == HystrixService.class) {
+				continue
+			}
+			
+			log.debug "Adding hystrix methods to ${artefactClass}"
+			def mc = artefactClass.metaClass
+			mc.hystrix =  { HystrixCommand command -> svc.hystrix(command) }
+			mc.hystrix << { Closure c -> svc.hystrix(c) }
+			mc.hystrix << { Map map, Closure c -> svc.hystrix(map, c) }
+		}
 	}
 }
