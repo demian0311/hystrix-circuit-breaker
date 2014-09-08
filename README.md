@@ -36,19 +36,8 @@ If you point your web browser to this then you will see a bunch of JSON.
 `http://localhost:8080/your-app/hystrix.stream`
 
 #### Hystrix Dashboard
-Although the stream has lots of data it isn't pretty.  To look at a cool spark chart and
-other data about your circuit breakers you need to use the [Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
-
-``` 
-$ git clone git@github.com:Netflix/Hystrix.git
-$ cd Hystrix/hystrix-dashboard
-$ ../gradlew jettyRun
-> Building > :hystrix-dashboard:jettyRun > Running at http://localhost:7979/hystrix-dashboard
-```
-Once running, open http://localhost:7979/hystrix-dashboard.
-
-When that comes up you will be presented with a form for a URL to give Hystrix Dashboard. 
-Enter the stream URL from above, probably something like this: http://localhost:8080/your-app/hystrix.stream
+To look at a cool spark chart and other data about your circuit breakers you need to use the Hystrix Dashboard. It
+is available in your application at /hystrixMonitor/index.
 
 #### Hystrix Turbine
 You don't need [Turbine](https://github.com/Netflix/Turbine) for your little application but if you are running in an

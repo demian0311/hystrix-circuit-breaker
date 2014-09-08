@@ -8,7 +8,6 @@ out/
 grails-hystrix-circuit-breaker-*.zip
 grails-hystrix-circuit-breaker-*.zip.sha1
 plugin.xml
-web-app
 target
 target-eclipse
 .settings
