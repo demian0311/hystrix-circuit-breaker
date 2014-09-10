@@ -15,6 +15,10 @@ grails.project.dependency.resolution = {
     dependencies {
         runtime 'com.netflix.hystrix:hystrix-core:1.3.7',
                 'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.7'
+				
+	  	runtime("com.netflix.turbine:turbine-core:0.4") {
+			  excludes("servlet-api","junit","mockito-all")
+		}
     }
 
     plugins {

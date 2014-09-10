@@ -9,7 +9,7 @@ You should also read [Release It!](http://pragprog.com/book/mnee/release-it).
 ## Installation
 In your `BuildConfig.groovy` file add the following line in the `plugins` section.
 
-```compile ":hystrix-circuit-breaker:0.1"```
+```compile ":hystrix-circuit-breaker:0.3"```
 
 ## Description
 
@@ -35,12 +35,64 @@ Hystrix will start streaming information about how your circuit breakers are doi
 If you point your web browser to this then you will see a bunch of JSON.
 `http://localhost:8080/your-app/hystrix.stream`
 
+#### Configuration
+Hystrix can be configured in Config.groovy in the 'hystrix' configuration tree. See [Hystrix Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration)
+for details.
+
+```
+hystrix {
+    threadpool {
+        'default' {
+            coreSize = 100
+        }
+    }
+}
+```
+
 #### Hystrix Dashboard
 To look at a cool spark chart and other data about your circuit breakers you need to use the Hystrix Dashboard. It
-is available in your application at /hystrixMonitor/index.
+is available in your application at /hystrixMonitor/index. Ensure '/hystrix.stream' is allowed for the correct user
+role(s).
 
 #### Hystrix Turbine
-You don't need [Turbine](https://github.com/Netflix/Turbine) for your little application but if you are running in an
-enterprise and especially if you have a cluster of servers you will probably want
-to use the Hystrix Turbine project to consolidate the circuit breaker stream 
-information.
+If you have a cluster of servers you will want to use the Hystrix Turbine project to consolidate the circuit breaker stream 
+information. If Turbine is configured in Config.groovy then the dashboard will consolidate information from all application instances. Read
+the Turbine configuration at [Netflix Turbine](https://github.com/Netflix/Turbine/wiki/Configuration-(1.x)). The dashboard
+is still accessed at /hystrixMonitor/index. When multiple clusters are configured links will be provided for each cluster.
+'/hystrix.stream' will need to be permitted without authentication, although you may restrict to IP address in the subnet(s)
+of your servers. Ensure '/turbine.stream' is allowed for the correct user role(s).
+
+```
+turbine {
+    instanceUrlSuffix = ':8080/MyApp/hystrix.stream'
+    
+    discovery {
+        config { // ConfigPropertyBasedDiscovery
+            default_ = ['server1','server2'] // default is a reserved word, this becomes 'default'
+            cluster2 = ['server3','server4']
+        }
+        
+        OR
+        
+        file = '/path/to/cluster.txt' // FileBasedInstanceDiscovery, clusters are read from the file
+        
+        OR
+        
+        eureka = ['asgname1','asgname2'] // EurekaInstanceDiscovery
+        
+        OR
+        
+        other {
+            impl = 'com.netflix.turbine.discovery.OtherInstanceDiscovery'
+            default_ {
+                prop1 = 'value1' // becomes "turbine.OtherInstanceDiscovery.default.prop1 = value1"
+                prop2 = 'value2' // becomes "turbine.OtherInstanceDiscovery.default.prop2 = value2"
+            }
+            cluster2 {
+                prop1 = 'value3' // becomes "turbine.OtherInstanceDiscovery.cluster2.prop1 = value3"
+                prop2 = 'value4' // becomes "turbine.OtherInstanceDiscovery.cluster2.prop2 = value4"
+            }
+        }
+    }
+}
+```

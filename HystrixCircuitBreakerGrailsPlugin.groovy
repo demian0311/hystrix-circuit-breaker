@@ -1,8 +1,10 @@
+import com.neidetcher.hcbp.util.HystrixConfigurationUtility
 import com.netflix.config.ConfigurationManager
+import com.netflix.turbine.init.TurbineInit
 
 class HystrixCircuitBreakerGrailsPlugin {
-    def version = "0.2"
-    def grailsVersion = "2.0 > *"
+    def version = "0.3"
+    def grailsVersion = "2.3 > *"
     def pluginExcludes = [
         "grails-app/controllers/hystrix/circuit/breaker/TestController.groovy"
     ]
@@ -33,21 +35,32 @@ class HystrixCircuitBreakerGrailsPlugin {
                 'url-pattern'("/hystrix.stream")
             }
         }
-    }
-	
-    private void configureHystrix(def application) {
-        def hystrixConfig = application.config.hystrix
-        if (hystrixConfig) {
-            def hystrixConfigProperties = hystrixConfig.toProperties('hystrix')
-            // throws NPE: ConfigurationManager.loadProperties(hystrixConfigProperties)
-            def config = ConfigurationManager.getConfigInstance()
-            hystrixConfigProperties.each { key, value ->
-                config.setProperty(key, value)
-            }
-        }
+		
+		if (application.config.turbine) {
+			lastMapping + {
+				'servlet' {
+					'servlet-name'("TurbineStreamServlet")
+					'display-name'("TurbineStreamServlet")
+					'servlet-class'("com.netflix.turbine.streaming.servlet.TurbineStreamServlet")
+					'description'("")
+				}
+				'servlet-mapping' {
+					'servlet-name'("TurbineStreamServlet")
+					'url-pattern'("/turbine.stream")
+				}
+			}
+			
+			def listeners = xml.'listener'
+			def lastListener = listeners[listeners.size() - 1]
+			lastListener + {
+				'listener' {
+					'listener-class'('hystrix.circuit.breaker.TurbineContextListener')
+				}
+			}
+		}
     }
 
     def doWithApplicationContext = { applicationContext -> 
-		configureHystrix(application) 
+		HystrixConfigurationUtility.configureHystrix(application, ConfigurationManager.getConfigInstance()) 
 	}
 }

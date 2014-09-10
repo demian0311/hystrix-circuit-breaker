@@ -1,0 +1,5 @@
+{weather-svc-hostname1},weather-svc-prod,up
+{weather-svc-hostname2},weather-svc-prod,down
+{weather-svc-hostname3},weather-svc-prod,up
+{weather-svc-hostname4},weather-svc-test,up
+{weather-svc-hostname5},weather-svc-canary,up
