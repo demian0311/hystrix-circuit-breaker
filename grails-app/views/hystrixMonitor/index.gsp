@@ -12,10 +12,24 @@
         <dfn style="display:none" id="hystrixThreadPoolContainer">${resource(dir:'components/hystrixThreadPool/templates', file: 'hystrixThreadPoolContainer.html', plugin: 'hystrix-circuit-breaker')}</dfn>
     
     <div id="header">
-        <h2><span id="title_name"><g:message code="app.name" default=""/></span></h2>
+        <h2><span id="title_name"><g:message code="app.name" default=""/><g:if test="${clusters.size() > 1}"> ${cluster}</g:if></span></h2>
     </div>
 
     <div class="container">
+    	<g:if test="${clusters.size() > 1}">
+        <div class="row">
+            <div class="menubar">
+                <div class="title">
+                Cluster
+                </div>
+                <div class="menu_actions">
+                    <g:each var="c" status="i" in="${clusters}"><g:link params="[cluster: c]">${c}</g:link><g:if test="${i < clusters.size()-1}"> | </g:if></g:each>
+                </div>
+            </div>
+        </div>
+        <div class="spacer"></div>
+        </g:if>
+        
         <div class="row">
             <div class="menubar">
                 <div class="title">
