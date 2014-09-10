@@ -11,6 +11,30 @@ class TestController {
 
         render("""{"result": "${result}" }\n""")
     }
+	
+	def hystrixAsPromise() {
+		def promise = hystrix(new DodgyStringReverser("FOO"))
+		String result = promise.get()
+		log.info("result: " + result)
+		
+		render("""{"result": "${result}" }\n""")
+	}
+	
+	def hystrixClosure() {
+		def promise = hystrix { "FOO".reverse() }
+		String result = promise.get()
+		log.info("result: " + result)
+		
+		render("""{"result": "${result}" }\n""")
+	}
+	
+	def hystrixClosureWithParams() {
+		def promise = hystrix(command: 'reverse', group: 'strings', fallback: 'oof') { throw new IOException() }
+		String result = promise.get()
+		log.info("result: " + result)
+		
+		render("""{"result": "${result}" }\n""")
+	}
 }
 
 class DodgyStringReverser extends HystrixCommand {
