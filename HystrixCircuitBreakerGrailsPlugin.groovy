@@ -5,7 +5,7 @@ import com.neidetcher.hcbp.util.HystrixConfigurationUtility
 import com.netflix.hystrix.HystrixCommand
 
 class HystrixCircuitBreakerGrailsPlugin {
-    def version = "0.3"
+    def version = "0.4"
     def grailsVersion = "2.3 > *"
     def pluginExcludes = [
         "grails-app/controllers/hystrix/circuit/breaker/TestController.groovy"
