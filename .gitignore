@@ -1,6 +1,5 @@
 .classpath
 .idea/
-.project
 *.iml
 *.ipr
 *.iws
