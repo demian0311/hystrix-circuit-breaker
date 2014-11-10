@@ -39,7 +39,7 @@ This makes using Hystrix with async programming terse and enables use with Grail
 Examples are in [TestController.groovy](https://github.com/demian0311/hystrix-circuit-breaker/blob/master/grails-app/controllers/hystrix/circuit/breaker/TestController.groovy).
 
 Wrap an existing HystrixCommand in a controller or service:
-```
+```groovy
 def index() {
 		def promise = hystrix(new DodgyStringReverser("FOO")) // DodgyStringReverser is a HystrixCommand implementation
 		render view:'index', model: tasks( one: promise )
@@ -47,7 +47,7 @@ def index() {
 ```
 
 Create a Promise implemented by Hystrix:
-```
+```groovy
 def index() {
 		def promise = hystrix { "FOO".reverse() }
 		render view:'index', model: tasks( one: promise )
@@ -55,7 +55,7 @@ def index() {
 ```
 
 The previous example will use defaults for the command which may not be desirable. It is better to specify at least the command and group keys:
-```
+```groovy
 def index() {
 		def promise = hystrix(command: 'reverse', group: 'strings') { "FOO".reverse() }
 		render view:'index', model: tasks( one: promise )
@@ -83,7 +83,7 @@ If you point your web browser to this then you will see a bunch of JSON.
 Hystrix can be configured in Config.groovy in the 'hystrix' configuration tree. See [Hystrix Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration)
 for details.
 
-```
+```groovy
 hystrix {
     threadpool {
         'default' {
@@ -106,7 +106,7 @@ is still accessed at /hystrixMonitor/index. When multiple clusters are configure
 '/hystrix.stream' will need to be permitted without authentication, although you may restrict to IP address in the subnet(s)
 of your servers. Ensure '/turbine.stream' is allowed for the correct user role(s).
 
-```
+```groovy
 turbine {
     instanceUrlSuffix = ':8080/MyApp/hystrix.stream'
     
