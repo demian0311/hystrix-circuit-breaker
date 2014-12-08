@@ -11,7 +11,7 @@ class TestController {
 
         render("""{"result": "${result}" }\n""")
     }
-	
+
 	def hystrixAsPromise() {
 		def promise = hystrix(new DodgyStringReverser("FOO"))
 		String result = promise.get()
@@ -35,10 +35,19 @@ class TestController {
 		
 		render("""{"result": "${result}" }\n""")
 	}
+
+    def hystrixAsPromiseAndBadThings() {
+        def promise = hystrix(new DodgyStringReverser("FOO", true))
+        String result = promise.get()
+        log.info("result: " + result)
+
+        render("""{"result": "${result}" }\n""")
+    }
 }
 
 class DodgyStringReverser extends HystrixCommand {
     String someState
+    Boolean makeBadThingsHappen = false
 
     static HystrixCommand.Setter createHystrixCommandSetter(){
         HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(this.class.name))
@@ -47,11 +56,16 @@ class DodgyStringReverser extends HystrixCommand {
                         .withCircuitBreakerSleepWindowInMilliseconds(1000))
     }
 
-
-    DodgyStringReverser(String stringIn){
+    /**
+     * A dodgy string reverser.  Always reverse strings this way to optimize patience with customers.
+     * @param stringIn Input string to reverse
+     * @param makeBadThingsHappen Set this to true to force exception thrown for testing
+     */
+    DodgyStringReverser(String stringIn, Boolean makeBadThingsHappen = false){
         super(createHystrixCommandSetter())
         println("command created")
         someState = stringIn
+        this.makeBadThingsHappen = makeBadThingsHappen
     }
 
     @Override
@@ -61,7 +75,7 @@ class DodgyStringReverser extends HystrixCommand {
         println("multiplier: " + multiplier)
 
         // indeterminate behavior
-        if(multiplier % 9 == 0){
+        if(this.makeBadThingsHappen){
             throw new RuntimeException("something bad happened")
         }
 

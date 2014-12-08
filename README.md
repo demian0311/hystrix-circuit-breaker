@@ -9,7 +9,7 @@ You should also read [Release It!](http://pragprog.com/book/mnee/release-it).
 ## Installation
 In your `BuildConfig.groovy` file add the following line in the `plugins` section.
 
-```compile ":hystrix-circuit-breaker:0.3"```
+```compile ":hystrix-circuit-breaker:0.5"```
 
 ## Description
 
