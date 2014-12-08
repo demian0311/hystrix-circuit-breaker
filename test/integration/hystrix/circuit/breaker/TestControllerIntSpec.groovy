@@ -31,4 +31,13 @@ class TestControllerIntSpec extends IntegrationSpec {
 		then:'Hystrix produced string is available'
 		controller.response.contentAsString == '{"result": "oof" }\n'
 	}
+
+	void "hystrixAsPromise() produces exception"() {
+		when:'Controller hystrixAsPromise() is called'
+		def controller = new TestController()
+		controller.hystrixAsPromiseAndBadThings()
+
+		then:'Hystrix produced string is available'
+		thrown(RuntimeException)
+	}
 }

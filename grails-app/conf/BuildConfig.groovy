@@ -1,5 +1,10 @@
 grails.project.work.dir = 'target'
 
+grails.project.fork = [
+        test: false,
+        run: false
+]
+
 grails.project.dependency.resolver = 'maven' // or ivy
 grails.project.dependency.resolution = {
 
@@ -15,20 +20,20 @@ grails.project.dependency.resolution = {
     dependencies {
         runtime 'com.netflix.hystrix:hystrix-core:1.3.7',
                 'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.7'
-				
-	  	runtime("com.netflix.turbine:turbine-core:0.4") {
-			  excludes("servlet-api","junit","mockito-all")
-		}
+
+        runtime("com.netflix.turbine:turbine-core:0.4") {
+            excludes("servlet-api", "junit", "mockito-all")
+        }
     }
 
     plugins {
-		compile ":jquery:1.10.2.2"
-		build ":tomcat:7.0.52.1"
-		runtime(':resources:1.1.6') {
-			export = false
-		}
-        build ':release:3.0.1', ':rest-client-builder:1.0.3', {
+        compile(":asset-pipeline:2.0.15"){
             export = false
         }
+        build ":tomcat:7.0.52.1"
+        build (':release:3.0.1', ':rest-client-builder:1.0.3') {
+            export = false
+        }
+        runtime ":jquery:1.11.1"
     }
 }

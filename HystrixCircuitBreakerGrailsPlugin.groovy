@@ -5,7 +5,7 @@ import com.neidetcher.hcbp.util.HystrixConfigurationUtility
 import com.netflix.hystrix.HystrixCommand
 
 class HystrixCircuitBreakerGrailsPlugin {
-    def version = "0.4"
+    def version = "0.5"
     def grailsVersion = "2.3 > *"
     def pluginExcludes = [
         "grails-app/controllers/hystrix/circuit/breaker/TestController.groovy"
@@ -16,7 +16,8 @@ class HystrixCircuitBreakerGrailsPlugin {
 
     def license = "APACHE"
     def developers = [
-        [name: 'Demian Neidetcher', email: 'demian0311@gmail.com']
+        [name: 'Demian Neidetcher', email: 'demian0311@gmail.com'],
+        [name: 'Christian Oestreich', email: 'acetrike@gmail.com']
     ]
     def issueManagement = [system: 'GITHUB', url: 'https://github.com/demian0311/hystrix-circuit-breaker/issues']
     def scm = [url: 'https://github.com/demian0311/hystrix-circuit-breaker']

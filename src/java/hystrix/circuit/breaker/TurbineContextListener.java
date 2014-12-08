@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.netflix.turbine.init.TurbineInit;
 
+@SuppressWarnings("UnusedDeclaration")
 public class TurbineContextListener implements ServletContextListener {
 	private static AtomicBoolean turbineInited = new AtomicBoolean(false);
 	private static final Logger log = Logger.getLogger(TurbineContextListener.class);

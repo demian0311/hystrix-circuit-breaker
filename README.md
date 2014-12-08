@@ -9,7 +9,7 @@ You should also read [Release It!](http://pragprog.com/book/mnee/release-it).
 ## Installation
 In your `BuildConfig.groovy` file add the following line in the `plugins` section.
 
-```compile ":hystrix-circuit-breaker:0.3"```
+```compile ":hystrix-circuit-breaker:0.5"```
 
 ## Description
 
@@ -19,7 +19,7 @@ should totally read up on all that Hystrix has to offer.
 
 To use Hystrix circuit breakers you need to wrap your code in a HystrixCommand.
 The is a Controller in this project contains a little sample class that extends  
-the HystrixCommand.
+the HystrixCommand. 
 
 [TestController.groovy](https://github.com/demian0311/hystrix-circuit-breaker/blob/master/grails-app/controllers/hystrix/circuit/breaker/TestController.groovy)
 
