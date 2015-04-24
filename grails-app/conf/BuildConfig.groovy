@@ -18,19 +18,19 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        runtime 'com.netflix.hystrix:hystrix-core:1.3.7',
-                'com.netflix.hystrix:hystrix-metrics-event-stream:1.3.7'
+        runtime 'com.netflix.hystrix:hystrix-core:1.4.5',
+                'com.netflix.hystrix:hystrix-metrics-event-stream:1.4.5'
 
-        runtime("com.netflix.turbine:turbine-core:0.4") {
+        runtime("com.netflix.turbine:turbine-core:1.0.0") {
             excludes("servlet-api", "junit", "mockito-all")
         }
     }
 
     plugins {
-        compile(":asset-pipeline:2.0.15"){
+        compile(":asset-pipeline:2.1.5"){
             export = false
         }
-        build ":tomcat:7.0.52.1"
+        build ":tomcat:7.0.54"
         build (':release:3.0.1', ':rest-client-builder:1.0.3') {
             export = false
         }
